@@ -10,6 +10,7 @@ const WhiteKey = (props) => {
   const isPressed = playing ? "white-key__pressed" : ""
 
   const play = e => {
+    e.preventDefault();
     if (e.target === e.currentTarget) return setPlaying(true)
   }
   const release = () => setPlaying(false)
@@ -24,7 +25,8 @@ const WhiteKey = (props) => {
       onMouseDown={play}
       onMouseUp={release}
       onMouseOut={release}
-      onMouseOver={handleMouseEnter}>
+      onMouseOver={handleMouseEnter}
+    >
       {props.children}
     </div>
   )

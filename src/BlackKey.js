@@ -9,6 +9,7 @@ const BlackKey = () => {
   const isPressed = playing ? "black-key__pressed" : "";
 
   const play = e => {
+    e.preventDefault();
     // e.stopPropagation();
     setPlaying(true);
   }
@@ -29,7 +30,8 @@ const BlackKey = () => {
       onMouseDown={play}
       onMouseUp={release}
       onMouseOut={release}
-      onMouseOver={handleMouseEnter}>
+      onMouseOver={handleMouseEnter}
+    >
     </div>
   )
 };
