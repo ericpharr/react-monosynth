@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import WhiteKey from "./WhiteKey";
-import BlackKey from './BlackKey';
+import Key from './Key';
 import { MouseDownProvider } from './MouseDownContext';
 
 const Keyboard = () => {
@@ -22,34 +21,26 @@ const Keyboard = () => {
       onMouseLeave={handleMouseLeave}
     >
       <MouseDownProvider value={mouseDown}>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey/>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey/>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey>
-          <BlackKey/>
-        </WhiteKey>
-        <WhiteKey/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
+        <Key acc={true}/>
+        <Key/>
       </MouseDownProvider>
     </div>
   )
 };
 
 export default Keyboard;
-

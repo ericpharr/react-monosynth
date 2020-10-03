@@ -5,7 +5,9 @@ import Keyboard from './keyboard'
 function App() {
 
   return (
-    <Keyboard/>
+    <>
+      <Keyboard/>
+    </>
   )
 }
 
