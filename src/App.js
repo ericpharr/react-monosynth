@@ -1,12 +1,15 @@
 import React from 'react';
 import './App.css';
+import { MouseDownProvider } from './MouseDownContext'
 import Keyboard from './keyboard'
 
 function App() {
 
   return (
     <>
-      <Keyboard/>
+          <MouseDownProvider>
+            <Keyboard/>
+          </MouseDownProvider>
     </>
   )
 }

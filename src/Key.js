@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { MouseDownContext } from './MouseDownContext';
 
-const Key = (props) => {
+const Key = (props, {children}) => {
 
   const isMouseDown = useContext(MouseDownContext);
   const [ playing, setPlaying ] = useState(false)

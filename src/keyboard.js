@@ -1,44 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import Key from './Key';
-import { MouseDownProvider } from './MouseDownContext';
+import { Interval, Note, Range } from '@tonaljs/tonal'
+
+const keys = numKeys => octave => {
+  const startNote = `C${octave}`
+  const noteArray = Range.chromatic([startNote, Note.transpose(startNote, Interval.fromSemitones(numKeys -1))])
+
+  return noteArray.map(Note.get)
+}
+
+const keyboard = keys(18)
 
 const Keyboard = () => {
 
-  const [ mouseDown, setMouseDown ] = useState(false)
-
-  const handleMouseDown = e => setMouseDown(true)
-  const handleMouseUp = e => setMouseDown(false)
-  const handleMouseLeave = e => {
-    e.stopPropagation();
-    return setMouseDown(false)
-  }
-
   return (
-    <div
-      className="keyboard"
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-    >
-      <MouseDownProvider value={mouseDown}>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-        <Key acc={true}/>
-        <Key/>
-      </MouseDownProvider>
+    <div className="keyboard">
+        { keyboard(3).map(note => <Key key={note.midi} acc={note.acc === "b"} note={note.name} />) }
     </div>
   )
 };
