@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { MouseDownContext } from './MouseDownContext';
+import { SynthContext } from './synthcontext'
 
 const Key = (props, {children}) => {
 
   const isMouseDown = useContext(MouseDownContext);
+  const synth = useContext(SynthContext);
   const [ playing, setPlaying ] = useState(false)
 
   const acc = props.acc ? "black" : "white"
@@ -11,6 +13,7 @@ const Key = (props, {children}) => {
 
   const play = e => {
     e.preventDefault();
+    synth.triggerAttack(props.note);
     return setPlaying(true)
   }
 
@@ -18,7 +21,10 @@ const Key = (props, {children}) => {
     if (isMouseDown) return play(e)
   };
 
-  const release = () => setPlaying(false)
+  const release = () => {
+    synth.triggerRelease();
+    setPlaying(false)
+  }
 
   return (
     <div className={`${acc} ${pressed}`}
