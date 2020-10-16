@@ -9,14 +9,12 @@ const SynthProvider = ({children}) => {
 
   useEffect(() => {
     synth.current = new MonoSynth().toDestination();
-    console.log(synth.current)
     setLoaded(true)
   }, []);
 
-
   return (
-    <SynthContext.Provider value={isLoaded ? synth.current : null }>
-      { children }
+    <SynthContext.Provider value={synth.current}>
+      {isLoaded ? children : "loading..."}
     </SynthContext.Provider>
   )
 }

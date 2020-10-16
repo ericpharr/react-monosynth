@@ -1,13 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { SynthContext } from './synthcontext'
+import { useKeyPress } from './use-keypress'
 
 const Key = (props) => {
 
   const synth = useContext(SynthContext);
   const [ playing, setPlaying ] = useState(false)
+  const keyPressed = useKeyPress(props.trigger, () => synth ? synth.triggerAttack(props.note) : {}, () => synth ? synth.triggerRelease() : {})
 
   const acc = props.acc ? "black" : "white"
-  const pressed = playing ? `${acc}__pressed` : ""
+  const pressed = playing || keyPressed ? `${acc}__pressed` : ""
 
   const play = e => {
     e.preventDefault();
