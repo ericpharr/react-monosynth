@@ -1,10 +1,8 @@
 import React, { useState, useContext } from 'react';
-import { MouseDownContext } from './MouseDownContext';
 import { SynthContext } from './synthcontext'
 
-const Key = (props, {children}) => {
+const Key = (props) => {
 
-  const isMouseDown = useContext(MouseDownContext);
   const synth = useContext(SynthContext);
   const [ playing, setPlaying ] = useState(false)
 
@@ -17,8 +15,14 @@ const Key = (props, {children}) => {
     return setPlaying(true)
   }
 
+  const changeNote = e => {
+    e.preventDefault();
+    synth.setNote(props.note);
+    return setPlaying(true)
+  }
+
   const handleMouseEnter = e => {
-    if (isMouseDown) return play(e)
+    if (e.buttons) return changeNote(e)
   };
 
   const release = () => {
@@ -26,11 +30,13 @@ const Key = (props, {children}) => {
     setPlaying(false)
   }
 
+  const releaseNote = () => setPlaying(false)
+
   return (
     <div className={`${acc} ${pressed}`}
       onMouseDown={play}
       onMouseUp={release}
-      onMouseOut={release}
+      onMouseOut={releaseNote}
       onMouseOver={handleMouseEnter}
     >
     </div>
