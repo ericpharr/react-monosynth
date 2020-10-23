@@ -1,17 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export function useKeyPress(targetKey, onPressDown = () => {}, onPressUp = () => {}) {
-	// State for keeping track of whether key is pressed
-	const [keyPressed, setKeyPressed] = useState(false);
 
-
-	useEffect(() => {
+	return useEffect(() => {
     let prevKey = ""
 
     const downHandler = ({ key }) => {
       if (key === targetKey && key !== prevKey) {
         prevKey = key
-        setKeyPressed(true);
         onPressDown();
       }
     }
@@ -20,7 +16,6 @@ export function useKeyPress(targetKey, onPressDown = () => {}, onPressUp = () =>
     const upHandler = ({ key }) => {
       if (key === targetKey) {
         prevKey = ""
-        setKeyPressed(false);
         onPressUp();
       }
     };
@@ -37,6 +32,4 @@ export function useKeyPress(targetKey, onPressDown = () => {}, onPressUp = () =>
 		};
     // eslint-disable-next-line
 	},[]);
-
-	return keyPressed;
 }

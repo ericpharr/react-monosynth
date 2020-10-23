@@ -5,7 +5,7 @@ const Key = (props) => {
 
   const { dispatch, note, index, trigger, acc, playing } = props
 
-  const keyPressed = useKeyPress(
+  useKeyPress(
     trigger,
     () => dispatch({type: "PLAY", note, index}),
     () => dispatch({type: "RELEASE", note, index})
@@ -19,15 +19,15 @@ const Key = (props) => {
     return dispatch({type: "PLAY", note, index})
   };
 
-  const handleMouseOver = e => {
-    e.preventDefault();
-    if (e.buttons) return dispatch({type: "PLAY", note, index})
-  };
-
   const handleMouseOut = e => {
     e.preventDefault();
     return dispatch({type: "RELEASE", note, index})
   }
+
+  const handleMouseOver = e => {
+    e.preventDefault();
+    if (e.buttons) return dispatch({type: "PLAY", note, index})
+  };
 
   return (
     <div className={`${color} ${pressed}`}

@@ -60,7 +60,6 @@ const Keyboard = () => {
     if (prev.current[0] === state.playing[0]) return
 
     prev.current = state.playing
-    console.log(state.playing)
 
     if (state.playing.length > 1) {
       synth.setNote(state.playing[0])
@@ -69,7 +68,6 @@ const Keyboard = () => {
     } else {
       synth.triggerAttack(state.playing[0])
     }
-
 
   },[synth, state.playing])
 
