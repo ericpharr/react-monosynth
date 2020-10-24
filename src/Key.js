@@ -1,43 +1,42 @@
-import React from 'react';
-import { useKeyPress } from './use-keypress'
+import React from "react";
+import { useKeyPress } from "./use-keypress";
 
 const Key = (props) => {
-
-  const { dispatch, note, index, trigger, acc, playing } = props
+  const { dispatch, note, index, trigger, acc, playing } = props;
 
   useKeyPress(
     trigger,
-    () => dispatch({type: "PLAY", note, index}),
-    () => dispatch({type: "RELEASE", note, index})
-  )
+    () => dispatch({ type: "PLAY", note, index }),
+    () => dispatch({ type: "RELEASE", note, index })
+  );
 
-  const color = acc ? "black" : "white"
-  const pressed = playing ? `${color}__pressed` : ""
+  const color = acc ? "black" : "white";
+  const pressed = playing ? `${color}__pressed` : "";
 
-  const handleMouseDown = e => {
+  const handleMouseDown = (e) => {
     e.preventDefault();
-    return dispatch({type: "PLAY", note, index})
+    return dispatch({ type: "PLAY", note, index });
   };
 
-  const handleMouseOut = e => {
+  const handleMouseOut = (e) => {
     e.preventDefault();
-    return dispatch({type: "RELEASE", note, index})
-  }
+    return dispatch({ type: "RELEASE", note, index });
+  };
 
-  const handleMouseOver = e => {
+  const handleMouseOver = (e) => {
     e.preventDefault();
-    if (e.buttons) return dispatch({type: "PLAY", note, index})
+    if (e.buttons) return dispatch({ type: "PLAY", note, index });
   };
 
   return (
-    <div className={`${color} ${pressed}`}
+    <div
+      className={`${color} ${pressed}`}
       onMouseDown={handleMouseDown}
-      onMouseUp={() => dispatch({type: "RELEASE", note, index})}
+      onMouseUp={() => dispatch({ type: "RELEASE", note, index })}
       onMouseOut={handleMouseOut}
       onMouseOver={handleMouseOver}
-    >
-    </div>
-  )
+    ></div>
+  );
 };
 
-export default React.memo(Key)
+export default React.memo(Key);

@@ -1,19 +1,16 @@
-import React from 'react';
-import './App.css';
-import Keyboard from './keyboard'
-import { SynthProvider } from './synthcontext'
+import React from "react";
+import "./App.css";
+import Keyboard from "./keyboard";
+import { SynthProvider } from "./synthcontext";
 
 function App() {
-
   return (
     <>
       <SynthProvider>
-          {/* <MouseDownProvider> */}
-            <Keyboard/>
-          {/* </MouseDownProvider> */}
+        <Keyboard />
       </SynthProvider>
     </>
-  )
+  );
 }
 
 export default App;
