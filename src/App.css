@@ -1,14 +1,21 @@
-.keyboard {
+.synth {
+  background-color: hsla(0, 0%, 23%, 0.8);
   width: 50%;
+  border-radius: 3px;
+}
+
+.keyboard {
+  width: 90%;
   padding: 7px 7px 2px 7px;
-  background-color: #555;
+  background-color: #444;
   border-radius: 5px 5px 0 0;
   box-shadow: inset 1px 4px 2px #333;
-  margin: 5px;
+  margin: 5px auto;
 }
 
 .keys-wrapper {
   display: flex;
+  margin-bottom: 1px;
 }
 
 .white {
@@ -55,4 +62,38 @@
 .black__pressed {
   background: linear-gradient(#555 33%, #333);
   box-shadow: 0 3px 3px -2px #000;
+}
+
+.octave-select__wrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.octave-select {
+  display: flex;
+  color: #eee;
+  justify-content: space-between;
+  width: 70%;
+  background-color: #353535;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: inset 3px 3px 3px #111;
+  margin-top: 5px;
+  vertical-align: top;
+}
+
+.octave-select label {
+  color: #888;
+}
+
+.octave-select label.current {
+  color: #fff;
+  /* font-weight: bold; */
+  text-shadow: 0px 0px 5px #ddd;
+}
+
+.octave-select input[type="radio"] {
+  display: none;
 }

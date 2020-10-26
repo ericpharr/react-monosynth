@@ -9,8 +9,8 @@ const SynthProvider = ({ children }) => {
 
   useEffect(() => {
     synth.current = new MonoSynth({
-      oscillator: { type: "fatsawtooth" },
-      portamento: 0.1,
+      oscillator: { type: "sawtooth" },
+      // portamento: 0.1,
     }).toDestination();
     setLoaded(true);
   }, []);

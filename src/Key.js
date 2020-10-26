@@ -7,7 +7,8 @@ const Key = (props) => {
   useKeyPress(
     trigger,
     () => dispatch({ type: "PLAY", note, index }),
-    () => dispatch({ type: "RELEASE", note, index })
+    () => dispatch({ type: "RELEASE", note, index }),
+    [note]
   );
 
   const color = acc ? "black" : "white";

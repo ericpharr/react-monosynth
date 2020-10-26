@@ -3,7 +3,8 @@ import { useEffect } from "react";
 export function useKeyPress(
   targetKey,
   onPressDown = () => {},
-  onPressUp = () => {}
+  onPressUp = () => {},
+  deps
 ) {
   return useEffect(() => {
     let prevKey = "";
@@ -34,5 +35,5 @@ export function useKeyPress(
       window.removeEventListener("keyup", upHandler);
     };
     // eslint-disable-next-line
-  }, []);
+  }, [...deps]);
 }
