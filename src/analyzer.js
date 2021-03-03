@@ -10,25 +10,26 @@ const Analyzer = () => {
   const state = useSynthState();
   const analyzer = useRef(null);
   const waveform = useRef(null);
+  const analyzerLine = useRef(null);
 
   useEffect(() => {
     waveform.current = new Analyser({ type: "waveform" });
-    synth.connect(waveform.current);
+    synth.envelope.connect(waveform.current);
     //eslint-disable-next-line
   }, []);
 
   useLayoutEffect(() => {
     if (
-      (state.isPlaying || state.playing.length > 0) &&
+      (state.isPlaying) &&
       waveform.current &&
       analyzer.current
     ) {
       let timerId;
 
       function draw() {
-        const svg = select(analyzer.current);
-        const width = svg.attr("width");
-        const height = svg.attr("height");
+        const div = analyzer.current;
+        const width = div.clientWidth;
+        const height = div.clientHeight;
         // const numberOfPoints = Math.ceil(width / 2);
         // svg.append("path");
 
@@ -44,7 +45,8 @@ const Analyzer = () => {
             return yScale(d);
           });
 
-        svg
+        select(analyzerLine.current)
+          .style("min-height", height)
           .select("path")
           .datum(waveform.current.getValue())
           .attr("d", svgLine)
@@ -65,21 +67,29 @@ const Analyzer = () => {
         console.log(timerId);
       };
     }
-  }, [state.playing.length, state.isPlaying]);
+  }, [state.isPlaying]);
 
   return (
     <div
+      ref={analyzer}
       style={{
         display: "flex",
-        justifyContent: "center",
-        padding: "5px",
+        // justifyContent: "center",
+        backgroundColor: "#111",
+        width: "90%",
+        minHeight: "200px",
+        margin: "0 auto 0 auto",
+        borderRadius: "4px",
       }}
     >
       <svg
-        width={500}
-        height={200}
-        ref={analyzer}
-        style={{ backgroundColor: "#111", borderRadius: "4px", margin: "5px" }}
+        ref={analyzerLine}
+        style={{
+          backgroundColor: "#111",
+          borderRadius: "4px",
+          height: "100%",
+          width: "100%",
+        }}
       >
         <path></path>
       </svg>
