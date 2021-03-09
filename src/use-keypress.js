@@ -6,6 +6,7 @@ export function useKeyPress(
   onPressUp = () => {},
   deps
 ) {
+
   return useEffect(() => {
     let prevKey = "";
 

@@ -6,16 +6,16 @@ const OctaveSelect = (props) => {
 
   useKeyPress(
     decrementKey,
-    () => dispatch({ type: "DECREMENT_OCTAVE" }),
+    () => dispatch({ type: "CHANGE_OCTAVE", octave: currentOctave - 1 }),
     () => {},
-    []
+    [currentOctave]
   );
 
   useKeyPress(
     incrementKey,
-    () => dispatch({ type: "INCREMENT_OCTAVE" }),
+    () => dispatch({ type: "CHANGE_OCTAVE", octave: currentOctave + 1 }),
     () => {},
-    []
+    [currentOctave]
   );
 
   return (

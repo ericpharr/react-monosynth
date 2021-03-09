@@ -1,18 +1,28 @@
 import React from "react";
 import "./App.css";
 import Keyboard from "./keyboard";
-import { SynthProvider } from "./synthcontext";
 import { Analyzer } from "./analyzer";
+import { useMonoSynth } from "./useMonoSynth";
 
 function App() {
+  const { synth, isSilent, setGate, setNote, isLoaded, note } = useMonoSynth();
+
   return (
     <>
-      <SynthProvider>
+      {isLoaded ? (
         <div className="synth">
-          <Analyzer />
-          <Keyboard numKeys={18} octave={3} />
+          <Analyzer synth={synth} isSilent={isSilent} />
+          <Keyboard
+            numKeys={18}
+            octave={3}
+            setNote={setNote}
+            setGate={setGate}
+            note={note}
+          />
         </div>
-      </SynthProvider>
+      ) : (
+        "loading"
+      )}
     </>
   );
 }

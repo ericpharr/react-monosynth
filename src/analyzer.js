@@ -1,37 +1,28 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { Analyser } from "tone";
-import { SynthContext, useSynthState } from "./synthcontext";
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import { select } from "d3-selection";
 
-const Analyzer = () => {
-  const synth = useContext(SynthContext);
-  const state = useSynthState();
+const Analyzer = ({ isSilent, synth }) => {
   const analyzer = useRef(null);
   const waveform = useRef(null);
   const analyzerLine = useRef(null);
 
   useEffect(() => {
     waveform.current = new Analyser({ type: "waveform" });
-    synth.envelope.connect(waveform.current);
+    synth.connect(waveform.current);
     //eslint-disable-next-line
   }, []);
 
   useLayoutEffect(() => {
-    if (
-      (state.isPlaying) &&
-      waveform.current &&
-      analyzer.current
-    ) {
+    if (!isSilent && waveform.current && analyzer.current) {
       let timerId;
-
       function draw() {
+        console.log("drawing");
         const div = analyzer.current;
         const width = div.clientWidth;
         const height = div.clientHeight;
-        // const numberOfPoints = Math.ceil(width / 2);
-        // svg.append("path");
 
         const xScale = scaleLinear().range([0, width]).domain([0, 1024]);
 
@@ -54,9 +45,9 @@ const Analyzer = () => {
           .attr("stroke", "white")
           .attr("stroke-width", "2px");
 
-        console.log("drawing...");
+        // console.log("drawing...");
         timerId = requestAnimationFrame(draw);
-        console.log(timerId);
+        // console.log(timerId);
       }
 
       timerId = requestAnimationFrame(draw);
@@ -64,17 +55,16 @@ const Analyzer = () => {
       return () => {
         console.log("cancelled");
         cancelAnimationFrame(timerId);
-        console.log(timerId);
+        // console.log(timerId);
       };
     }
-  }, [state.isPlaying]);
+  }, [isSilent]);
 
   return (
     <div
       ref={analyzer}
       style={{
         display: "flex",
-        // justifyContent: "center",
         backgroundColor: "#111",
         width: "90%",
         minHeight: "200px",

@@ -1,6 +1,5 @@
 import React, { useReducer, useEffect } from "react";
 import Key from "./Key";
-import { useSynthDispatch } from "./synthcontext";
 import { createKeyboard } from "./keyboard-helpers";
 import OctaveSelect from "./octave-select";
 
@@ -31,21 +30,10 @@ function keyboardReducer(state, action) {
         ],
       };
     case "CHANGE_OCTAVE":
+      if (action.octave < 1 || action.octave > 6) return { ...state };
       return createKeyboard({
         numKeys: state.numKeys,
         octave: action.octave,
-      });
-    case "INCREMENT_OCTAVE":
-      if (state.octave === 6) return { ...state };
-      return createKeyboard({
-        numKeys: state.numKeys,
-        octave: state.octave + 1,
-      });
-    case "DECREMENT_OCTAVE":
-      if (state.octave === 1) return { ...state };
-      return createKeyboard({
-        numKeys: state.numKeys,
-        octave: state.octave - 1,
       });
     default:
       throw new Error(`Unsupported action type: ${action.type}`);
@@ -53,8 +41,6 @@ function keyboardReducer(state, action) {
 }
 
 const Keyboard = (props) => {
-  const synthDispatch = useSynthDispatch();
-
   const [state, dispatch] = useReducer(
     keyboardReducer,
     { numKeys: props.numKeys, octave: props.octave },
@@ -62,8 +48,9 @@ const Keyboard = (props) => {
   );
 
   useEffect(() => {
-    synthDispatch({ type: "NOTES", playing: state.playing });
-  }, [synthDispatch, state.playing]);
+    props.setGate(state.playing.length > 0);
+    props.setNote(state.playing[0] || props.note);
+  });
 
   return (
     <>
