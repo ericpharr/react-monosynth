@@ -5,20 +5,31 @@ import { Analyzer } from "./analyzer";
 import { useMonoSynth } from "./useMonoSynth";
 
 function App() {
-  const { synth, isSilent, setGate, setNote, isLoaded, note } = useMonoSynth();
+  const {
+    synth,
+    isSilent,
+    setGate,
+    setNote,
+    isLoaded,
+    note,
+  } = useMonoSynth();
 
   return (
     <>
       {isLoaded ? (
-        <div className="synth">
-          <Analyzer synth={synth} isSilent={isSilent} />
-          <Keyboard
-            numKeys={18}
-            octave={3}
-            setNote={setNote}
-            setGate={setGate}
-            note={note}
-          />
+        <div class="layout">
+          <div className="synth">
+            <div className="params">
+              <Analyzer synth={synth} isSilent={isSilent} />
+            </div>
+            <Keyboard
+              numKeys={18}
+              octave={3}
+              setNote={setNote}
+              setGate={setGate}
+              note={note}
+            />
+          </div>
         </div>
       ) : (
         "loading"
