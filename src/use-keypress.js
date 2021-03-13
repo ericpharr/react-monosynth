@@ -6,20 +6,21 @@ export function useKeyPress(
   onPressUp = () => {},
   deps
 ) {
-
   return useEffect(() => {
     let prevKey = "";
 
-    const downHandler = ({ key }) => {
-      if (key === targetKey && key !== prevKey) {
-        prevKey = key;
+    const downHandler = (e) => {
+      if (e.key === "'") e.preventDefault();
+      if (e.key === targetKey && e.key !== prevKey) {
+        prevKey = e.key;
         onPressDown();
       }
     };
 
     // If released key is our target key then set to false
-    const upHandler = ({ key }) => {
-      if (key === targetKey) {
+    const upHandler = (e) => {
+      if (e.key === "'") e.preventDefault();
+      if (e.key === targetKey) {
         prevKey = "";
         onPressUp();
       }
