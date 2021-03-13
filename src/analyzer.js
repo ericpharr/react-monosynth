@@ -19,7 +19,7 @@ const Analyzer = ({ isSilent, synth }) => {
     if (!isSilent && waveform.current && analyzer.current) {
       let timerId;
       function draw() {
-        console.log("drawing");
+        // console.log("drawing");
         const div = analyzer.current;
         const width = div.clientWidth;
         const height = div.clientHeight;
@@ -37,7 +37,6 @@ const Analyzer = ({ isSilent, synth }) => {
           });
 
         select(analyzerLine.current)
-          .style("min-height", height)
           .select("path")
           .datum(waveform.current.getValue())
           .attr("d", svgLine)
@@ -45,17 +44,14 @@ const Analyzer = ({ isSilent, synth }) => {
           .attr("stroke", "white")
           .attr("stroke-width", "2px");
 
-        // console.log("drawing...");
         timerId = requestAnimationFrame(draw);
-        // console.log(timerId);
       }
 
       timerId = requestAnimationFrame(draw);
 
       return () => {
-        console.log("cancelled");
+        // console.log("cancelled");
         cancelAnimationFrame(timerId);
-        // console.log(timerId);
       };
     }
   }, [isSilent]);
@@ -63,21 +59,13 @@ const Analyzer = ({ isSilent, synth }) => {
   return (
     <div
       ref={analyzer}
-      style={{
-        display: "flex",
-        backgroundColor: "#111",
-        width: "90%",
-        minHeight: "200px",
-        margin: "0 auto 0 auto",
-        borderRadius: "4px",
-      }}
+      className="analyzer"
     >
       <svg
         ref={analyzerLine}
         style={{
-          backgroundColor: "#111",
+          // backgroundColor: "#222",
           borderRadius: "4px",
-          height: "100%",
           width: "100%",
         }}
       >

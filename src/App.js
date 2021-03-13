@@ -3,23 +3,24 @@ import "./App.css";
 import Keyboard from "./keyboard";
 import { Analyzer } from "./analyzer";
 import { useMonoSynth } from "./useMonoSynth";
+import {OscillatorSelect} from "./oscillator-select";
 
 function App() {
-  const {
-    synth,
-    isSilent,
-    setGate,
-    setNote,
-    isLoaded,
-    note,
-  } = useMonoSynth();
+  const { oscillatorType,synth, isSilent, oscillator, setGate, setNote, isLoaded, note } = useMonoSynth({
+    oscillator: { type: "sawtooth" },
+  });
 
   return (
     <>
       {isLoaded ? (
-        <div class="layout">
+        <div className="layout">
           <div className="synth">
+            <h1 className="heading">MonoSynth</h1>
             <div className="params">
+              <div className="oscillator-group">
+                  <OscillatorSelect oscillator={oscillator} oscillatorType={oscillatorType}/>
+              </div>
+              <div className="item-2"></div>
               <Analyzer synth={synth} isSilent={isSilent} />
             </div>
             <Keyboard

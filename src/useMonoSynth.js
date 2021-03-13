@@ -18,13 +18,11 @@ export const useMonoSynth = (params = {}) => {
   const [gate, setGate] = useState(false);
   const [note, setNote] = useState();
   const [isSilent, setSilent] = useState(true);
+  const [oscillatorType, setOscillatorType] = useState();
   const prevGate = usePrevious(gate);
   const synth = useRef();
-  const setEnvelope = (params) => dispatch({ envelope: params });
-  const setFilter = (params) => dispatch({ filter: params });
-  const setFilterEnvelope = (params) => dispatch({ filterEnvelope: params });
-  const setOscillator = (params) => dispatch({ oscillator: params });
-  const setPortamento = (value) => dispatch({ portamento: value });
+  const setProperties = (property) => (params) =>
+    dispatch({ [property]: params });
 
   const onSilence = useCallback(() => setSilent(true), []);
 
@@ -40,6 +38,10 @@ export const useMonoSynth = (params = {}) => {
 
   useEffect(() => {
     synth.current.set(state);
+    setOscillatorType({
+      base: synth.current.oscillator.baseType,
+      source: synth.current.oscillator.sourceType,
+    });
   }, [state]);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export const useMonoSynth = (params = {}) => {
   }, [isLoaded, state]);
 
   useEffect(() => {
-    console.log(`gate is ${gate ? "on" : "off"}`);
+    // console.log(`gate is ${gate ? "on" : "off"}`);
     gate && setSilent(false);
   }, [gate, isSilent]);
 
@@ -78,16 +80,18 @@ export const useMonoSynth = (params = {}) => {
   }, [gate, note, prevGate]);
 
   return {
-    ...state,
+    ...{
+      portamento: [state.portamento, setProperties("portamento")],
+      envelope: [state.envelope, setProperties("envelope")],
+      filter: [state.filter, setProperties("filter")],
+      filterEnvelope: [state.filterEnvelope, setProperties("filterEnvelope")],
+      oscillator: [state.oscillator, setProperties("oscillator")],
+    },
+oscillatorType,
     synth: synth.current,
     setGate,
     note,
     setNote,
-    setEnvelope,
-    setFilter,
-    setFilterEnvelope,
-    setOscillator,
-    setPortamento,
     isLoaded,
     isSilent,
   };
