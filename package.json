@@ -4,26 +4,23 @@
   "private": true,
   "dependencies": {
     "@openfonts/fira-code_latin": "^1.44.8",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@tonaljs/tonal": "^4.2.1",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.8.3",
+    "@tonaljs/tonal": "^4.6.0",
     "d3-scale": "^3.2.3",
     "d3-selection": "^2.0.0",
-    "d3-shape": "^2.0.0",
-    "lodash": "^4.17.20",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3",
-    "tone": "^14.7.58"
+    "d3-shape": "^2.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.3",
+    "tone": "^14.7.77"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,15 +37,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@babel/core": "^7.11.4",
-    "@storybook/addon-actions": "^6.1.21",
-    "@storybook/addon-essentials": "^6.1.21",
-    "@storybook/addon-links": "^6.0.16",
-    "@storybook/node-logger": "^6.0.16",
-    "@storybook/preset-create-react-app": "^3.1.4",
-    "@storybook/react": "^6.1.21",
-    "babel-loader": "^8.1.0",
-    "react-is": "^16.13.1"
-  }
+  "devDependencies": {}
 }
