@@ -3,46 +3,54 @@ import {
   Dispatch,
   ReactChildren,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { useMonoSynth } from "./MonoSynthProvider";
+import { useMonoSynth } from "./MonoSynthContext";
 
 interface SoundProviderProps {
   children: ReactChildren;
 }
 
-interface ISoundContext {
+interface SoundContextValue {
   isSilent: boolean;
 }
 
-interface ISoundDispatchContext {
+interface SoundDispatchContextValue {
   setIsSilent: Dispatch<SetStateAction<boolean>>;
+  setIsReleased: Dispatch<SetStateAction<boolean>>;
 }
 
-const SoundContext = createContext<ISoundContext>({
+const SoundContext = createContext<SoundContextValue>({
   isSilent: true,
 });
 
-const SoundDispatchContext = createContext<ISoundDispatchContext>({
-  setIsSilent: () => {},
-});
+const SoundDispatchContext = createContext<SoundDispatchContextValue>(
+  {} as SoundDispatchContextValue
+);
 
 export function SoundProvider({ children }: SoundProviderProps) {
   const { synth } = useMonoSynth();
   const [isSilent, setIsSilent] = useState<boolean>(true);
+  const [isReleased, setIsReleased] = useState(false);
+
+  const onSilence = useCallback(() => {
+    if (isReleased) {
+      setIsSilent(true);
+    }
+  }, [isReleased]);
 
   useEffect(() => {
     if (synth) {
-      const onSilence = () => setIsSilent(true);
       synth.onsilence = onSilence;
     }
-  }, [synth]);
+  }, [onSilence, synth]);
 
   return (
     <SoundContext.Provider value={{ isSilent }}>
-      <SoundDispatchContext.Provider value={{ setIsSilent }}>
+      <SoundDispatchContext.Provider value={{ setIsSilent, setIsReleased }}>
         {children}
       </SoundDispatchContext.Provider>
     </SoundContext.Provider>
@@ -56,7 +64,7 @@ export function useSoundState() {
 }
 
 export function useSoundDispatch() {
-  const { setIsSilent } = useContext(SoundDispatchContext);
+  const { setIsSilent, setIsReleased } = useContext(SoundDispatchContext);
 
-  return { setIsSilent };
+  return { setIsSilent, setIsReleased };
 }
