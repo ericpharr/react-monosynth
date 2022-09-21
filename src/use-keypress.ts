@@ -1,30 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function useKeyPress(
-  targetKey,
+  targetKey: string,
   onPressDown = () => {},
   onPressUp = () => {},
-  deps
+  deps: any[]
 ) {
+  const prevKey = useRef("");
   return useEffect(() => {
-    let prevKey = "";
-
-    const downHandler = (e) => {
+    function downHandler(e: KeyboardEvent) {
       if (e.key === "'") e.preventDefault();
-      if (e.key === targetKey && e.key !== prevKey) {
-        prevKey = e.key;
+      if (e.key === targetKey && e.key !== prevKey.current) {
+        prevKey.current = e.key;
         onPressDown();
       }
-    };
+    }
 
     // If released key is our target key then set to false
-    const upHandler = (e) => {
+    function upHandler(e: KeyboardEvent) {
       if (e.key === "'") e.preventDefault();
       if (e.key === targetKey) {
-        prevKey = "";
+        prevKey.current = "";
         onPressUp();
       }
-    };
+    }
     // If pressed key is our target key then set to true
 
     // Add event listeners

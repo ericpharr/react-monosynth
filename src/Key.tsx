@@ -1,6 +1,6 @@
-import React, { MouseEvent, useState } from "react";
+import React, { MouseEvent, useContext } from "react";
 import { Note } from "tone/build/esm/core/type/NoteUnits";
-import { useKeyBoard } from "./KeyboardProvider";
+import { KeyboardContext } from "./KeyboardProvider";
 import { useKeyPress } from "./use-keypress";
 
 interface KeyProps {
@@ -10,19 +10,17 @@ interface KeyProps {
 }
 
 export const Key = ({ note, trigger, acc }: KeyProps) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const { play, release } = useKeyBoard();
+  const { playing, play, release } = useContext(KeyboardContext);
+  const isPlaying = playing.includes(note);
   const color = acc ? "black" : "white";
   const pressed = isPlaying ? `${color}__pressed` : "";
 
   useKeyPress(
     trigger,
     () => {
-      setIsPlaying(true);
       play(note);
     },
     () => {
-      setIsPlaying(false);
       release(note);
     },
     []
@@ -30,14 +28,12 @@ export const Key = ({ note, trigger, acc }: KeyProps) => {
 
   const handleMouseDown = (e: MouseEvent) => {
     e.preventDefault();
-    setIsPlaying(true);
     play(note);
   };
 
   const handleMouseUp = (event: MouseEvent) => {
     event.preventDefault();
     if (isPlaying) {
-      setIsPlaying(false);
       release(note);
     }
   };
@@ -45,7 +41,6 @@ export const Key = ({ note, trigger, acc }: KeyProps) => {
   const handleMouseOut = (e: MouseEvent) => {
     e.preventDefault();
     if (isPlaying) {
-      setIsPlaying(false);
       release(note);
     }
   };
@@ -53,7 +48,6 @@ export const Key = ({ note, trigger, acc }: KeyProps) => {
   const handleMouseOver = (e: MouseEvent) => {
     e.preventDefault();
     if (e.buttons) {
-      setIsPlaying(true);
       play(note);
     }
   };
@@ -65,6 +59,9 @@ export const Key = ({ note, trigger, acc }: KeyProps) => {
       onMouseUp={handleMouseUp}
       onMouseOut={handleMouseOut}
       onMouseOver={handleMouseOver}
+      style={{ position: "relative" }}
+      type="button"
+      aria-pressed={isPlaying}
     ></button>
   );
 };

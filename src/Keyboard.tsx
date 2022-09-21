@@ -34,21 +34,19 @@ export function Keyboard({ numKeys, octave }: KeyboardProps) {
   );
 
   return (
-    <>
-      <div className="keyboard">
-        <div className="keys-wrapper">
-          {keys.map((note, index) => {
-            return (
-              <Key
-                key={`key-${note.name}`}
-                acc={note.acc === "b"}
-                note={note.name as ToneNote}
-                trigger={keyTriggers[index]}
-              />
-            );
-          })}
-        </div>
+    <div className="keyboard">
+      <div className="keys-wrapper">
+        {keys.map((note, index) => {
+          return (
+            <Key
+              key={`key-${note.name}`}
+              acc={note.acc === "b"}
+              note={note.name as ToneNote}
+              trigger={keyTriggers[index]}
+            />
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 }
