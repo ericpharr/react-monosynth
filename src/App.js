@@ -1,41 +1,48 @@
-import React from "react";
 import "./App.css";
-import Keyboard from "./keyboard";
-import { Analyzer } from "./analyzer";
-import { useMonoSynth } from "./useMonoSynth";
-import {OscillatorSelect} from "./oscillator-select";
+import { Keyboard } from "./Keyboard.tsx";
+import { AnalyserProvider, Analyzer } from "./Analyser";
+import { OscillatorSelect } from "./OscillatorBaseType";
+import { MonoSynthProvider } from "./MonoSynthContext";
+import { FilterKnob } from "./FilterKnob";
+import { OscillatorProvider } from "./OscillatorContext";
+import { FilterEnvelopeProvider } from "./FilterEnvelopeContext";
+import { KeyboardProvider } from "./KeyboardProvider";
+import { SoundProvider } from "./SoundProvider";
+import { FilterProvider } from "./FilterContext";
+import { FilterType } from "./FilterType";
+import { OscillatorSourceType } from "./OscillatorSourceType";
 
 function App() {
-  const { oscillatorType,synth, isSilent, oscillator, setGate, setNote, isLoaded, note } = useMonoSynth({
-    oscillator: { type: "sawtooth" },
-  });
-
   return (
-    <>
-      {isLoaded ? (
-        <div className="layout">
-          <div className="synth">
-            <h1 className="heading">MonoSynth</h1>
+    <MonoSynthProvider>
+      <div className="layout">
+        <div className="synth">
+          <h1 className="heading">MonoSynth</h1>
+          <SoundProvider>
             <div className="params">
               <div className="oscillator-group">
-                  <OscillatorSelect oscillator={oscillator} oscillatorType={oscillatorType}/>
+                <OscillatorProvider>
+                  <OscillatorSelect />
+                  <OscillatorSourceType />
+                </OscillatorProvider>
               </div>
-              <div className="item-2"></div>
-              <Analyzer synth={synth} isSilent={isSilent} />
+              <AnalyserProvider options={{ type: "waveform" }}>
+                <Analyzer />
+              </AnalyserProvider>
+              <FilterEnvelopeProvider>
+                <FilterKnob />
+              </FilterEnvelopeProvider>
+              <FilterProvider>
+                <FilterType />
+              </FilterProvider>
             </div>
-            <Keyboard
-              numKeys={18}
-              octave={3}
-              setNote={setNote}
-              setGate={setGate}
-              note={note}
-            />
-          </div>
+            <KeyboardProvider>
+              <Keyboard numKeys={18} octave={3} />
+            </KeyboardProvider>
+          </SoundProvider>
         </div>
-      ) : (
-        "loading"
-      )}
-    </>
+      </div>
+    </MonoSynthProvider>
   );
 }
 
