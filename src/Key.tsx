@@ -1,7 +1,7 @@
-import React, { MouseEvent, useContext } from "react";
+import { MouseEvent, useContext } from "react";
 import { Note } from "tone/build/esm/core/type/NoteUnits";
 import { KeyboardContext } from "./KeyboardProvider";
-import { useKeyPress } from "./use-keypress";
+import { useKeyPress } from "./useKeyPress";
 
 interface KeyProps {
   note: Note;

@@ -8,6 +8,7 @@ export const FilterType = () => {
     setFilter({ type: value });
   };
 
+
   return (
     <ToggleGroup>
       <ToggleButton

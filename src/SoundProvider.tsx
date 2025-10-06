@@ -1,7 +1,6 @@
 import {
   createContext,
   Dispatch,
-  ReactChildren,
   SetStateAction,
   useCallback,
   useContext,
@@ -11,7 +10,7 @@ import {
 import { useMonoSynth } from "./MonoSynthContext";
 
 interface SoundProviderProps {
-  children: ReactChildren;
+  children: JSX.Element | JSX.Element[];
 }
 
 interface SoundContextValue {

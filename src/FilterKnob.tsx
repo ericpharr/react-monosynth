@@ -5,7 +5,7 @@ import { useFilterEnvelope } from "./FilterEnvelopeContext";
 export function FilterKnob() {
   const { filterEnvelope, setFilterEnvelope } = useFilterEnvelope();
 
-  const handleChange = (baseFrequency: Frequency) => {
+	const handleChange = (baseFrequency: Frequency) => {
     setFilterEnvelope({ baseFrequency });
   };
 

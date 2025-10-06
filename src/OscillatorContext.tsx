@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  ReactChildren,
   useContext,
   useState,
 } from "react";
@@ -19,7 +18,7 @@ interface OscillatorContextValue {
 const OscillatorContext = createContext({} as OscillatorContextValue);
 
 interface OscillatorProviderProps {
-  children: ReactChildren;
+  children: JSX.Element | JSX.Element[];
 }
 
 export const OscillatorProvider = ({ children }: OscillatorProviderProps) => {

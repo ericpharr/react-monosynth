@@ -1,14 +1,11 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  createContext,
-  ReactElement,
-  useContext,
-} from "react";
-import { Analyser, AnalyserOptions } from "tone";
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
+import {
+  createContext, useContext, useEffect,
+  useRef,
+  useState
+} from "react";
+import { Analyser, AnalyserOptions } from "tone";
 import { useMonoSynth } from "./MonoSynthContext";
 import { useSoundState } from "./SoundProvider";
 
@@ -25,10 +22,10 @@ export const AnalyserProvider = ({
   options,
   children,
 }: {
-  options?: AnalyserOptions;
-  children?: ReactElement;
-  width: number;
-  height: number;
+  options?: Partial<AnalyserOptions>;
+  children?: JSX.Element;
+  // width: number;
+  // height: number;
 }) => {
   const { synth } = useMonoSynth();
   const { isSilent } = useSoundState();

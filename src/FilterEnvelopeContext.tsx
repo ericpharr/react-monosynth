@@ -1,4 +1,4 @@
-import { createContext, ReactChildren, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { FrequencyEnvelopeOptions } from "tone";
 import { useMonoSynth } from "./MonoSynthContext";
 
@@ -10,7 +10,7 @@ interface FilterEnvelopeContextValue {
 const FilterEnvelopeContext = createContext({} as FilterEnvelopeContextValue);
 
 interface FilterEnvelopeProviderProps {
-  children: ReactChildren;
+  children: JSX.Element | JSX.Element[];
 }
 
 export const FilterEnvelopeProvider = ({

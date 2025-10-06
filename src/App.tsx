@@ -1,5 +1,5 @@
 import "./App.css";
-import { Keyboard } from "./Keyboard.tsx";
+import { Keyboard } from "./Keyboard";
 import { AnalyserProvider, Analyzer } from "./Analyser";
 import { OscillatorSelect } from "./OscillatorBaseType";
 import { MonoSynthProvider } from "./MonoSynthContext";

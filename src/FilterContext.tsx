@@ -1,4 +1,4 @@
-import { createContext, ReactChildren, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { FilterOptions } from "tone";
 import { useMonoSynth } from "./MonoSynthContext";
 
@@ -10,7 +10,7 @@ interface FilterContextValue {
 const FilterContext = createContext({} as FilterContextValue);
 
 interface FilterProviderProps {
-  children: ReactChildren;
+  children: JSX.Element | JSX.Element[];
 }
 
 export const FilterProvider = ({ children }: FilterProviderProps) => {

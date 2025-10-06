@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { useEffect, createContext, useRef, ReactChildren } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { MonoSynth, MonoSynthOptions } from "tone";
 
 interface MonoSynthContextValue {
@@ -12,7 +11,7 @@ export const MonoSynthContext = createContext<MonoSynthContextValue>(
 
 export interface MonoSynthProviderProps {
   options?: MonoSynthOptions;
-  children?: ReactChildren;
+  children?: JSX.Element | JSX.Element[];
 }
 
 export function MonoSynthProvider({
@@ -24,7 +23,7 @@ export function MonoSynthProvider({
 
   useEffect(() => {
     if (!synth.current) {
-      synth.current = new MonoSynth().toDestination();
+      synth.current = new MonoSynth(options).toDestination();
       setIsLoaded(true);
     }
 
@@ -33,7 +32,7 @@ export function MonoSynthProvider({
       synth.current = null;
       setIsLoaded(false);
     };
-  }, []);
+  }, [options]);
 
   return (
     <MonoSynthContext.Provider value={{ synth: synth.current }}>
