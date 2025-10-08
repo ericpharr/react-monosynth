@@ -1,3 +1,7 @@
+body button:focus {
+  outline: none;
+}
+
 .layout {
   display: grid;
   place-items: center;
@@ -6,8 +10,8 @@
 }
 
 .synth {
-  width: 50%;
-  min-width: 640px;
+  width: 64rem;
+  /* min-width: 640px; */
   border-radius: 3px;
   box-shadow: 2px 4px 5px;
   background: linear-gradient(180deg, hsla(0, 0%, 23%, 0.8), #444);
@@ -57,12 +61,13 @@
 .oscillator-group {
   grid-column: 1 / 1;
   grid-row: 1 / 4;
-  border: 1px solid #777;
+  /* border: 1px solid #777; */
   justify-self: stretch;
   margin: 8px 4px 8px 8px;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   background-color: #444;
   /* box-shadow: 1px 1px 2px 1px #111; */
+  display: flex;
 }
 
 .keyboard {
@@ -118,6 +123,7 @@
   /* box-shadow: 0px 6px 5px -4px #000; */
   box-shadow: 0px 6px 5px -4px #000;
   border-radius: 1px 0 3px 3px;
+  border-width: 0;
 }
 
 .black__pressed {
@@ -145,38 +151,132 @@
   vertical-align: top;
 }
 
-.octave-select label,
+/* .octave-select label, */
 .wave-modifier label {
   color: #aaa;
-padding: 2px 4px;
+  /* padding: 2px 4px; */
+  padding: 0.4rem;
+}
+
+fieldset {
+  all: unset;
+}
+
+.osc-select__wrapper {
+  position: relative;
+  border: 1px solid #0000;
+  border-top: 1px solid #222;
+  border-bottom: none;
+  /* border-color: #222; */
+  /* border-bottom: 0px; */
+  /* background-color: #555; */
+}
+
+.osc-select__wrapper:first-child {
+  /* border-radius: 5px 5px 0 0; */
+  border: 1px solid #0000;
+  border-bottom: none;
+  /* border-bottom: 0px; */
+}
+.osc-select__wrapper:last-child {
+  border-radius: 0 0 5px 5px;
+  border-bottom: 1px solid #0000;
 }
 
 .octave-select label.current,
 .osc-box:checked + label {
-  color: #eee;
+  color: #fff;
   /* font-weight: bold; */
-  text-shadow: 0px 0px 5px #ddd;
+  /* border: 1px solid ; */
+  text-shadow: 0px 0px 1px #fffb;
+  box-shadow: inset 0px 0px 3px 0px #111;
+  background-color: #444;
 }
 
 .octave-select input[type="radio"],
 .wave-modifier input[type="checkbox"] {
-  display: none;
+  /* position: absolute;
+  opacity: 0;
+  width: 100%; */
+  /* height: 100%; */
+  all: unset;
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .parameter-label {
   font-size: 12px;
   color: #eee;
   font-family: "Fira Code";
-  padding: 4px 8px;
+  /* padding: 4px 8px; */
+  padding: 0.4rem;
+  text-align: center;
   margin: 0;
 }
 
 .wave-modifier {
-  background-color: #333;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  /* background-color: #555; */
+  /* border-radius: 4px; */
+  /* box-shadow: inset 0px 0px 3px 1px #222; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* flex-direction: column; */
+  background-color: #5559;
+  /* border-radius: 4px; */
+  width: 4rem;
+  box-shadow: inset 0px 0px 4px 0px #111;
   border-radius: 4px;
-  box-shadow: inset 0px 0px 3px 1px #222;
+  box-sizing: border-box;
+  overflow: hidden;
 }
+
+/* .wave-modifier:first-child {
+  border: 1px solid white;
+} */
 
 .wave-modifier label {
   display: block;
+  padding: 0.4rem;
+  text-align: center;
+}
+
+.knob {
+  display: flex;
+  width: 5rem;
+  flex-direction: column;
+  color: #ccc;
+  padding: 0rem 1rem;
+}
+
+.knob-label {
+  background-color: #333;
+  border-radius: 4px;
+  align-self: center;
+  padding: 0.2rem 0.7rem;
+  font-family: "Fira Code";
+  font-size: 1.2rem;
+}
+.waveform-button {
+  background-color: #333;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 999999px;
+  border: 1px solid #888;
+}
+.waveform-button__wrapper {
+  background-color: #333;
+  padding: 0.5rem;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 999999px;
+  margin: 0.5rem;
+  box-shadow: inset 0 0 4px 2px #1118;
+  margin-top: 2rem;
 }

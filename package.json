@@ -7,14 +7,19 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.3",
-    "@tonaljs/tonal": "^4.6.0",
+    "@tonaljs/tonal": "^4.6.5",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.21",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
     "d3-scale": "^3.2.3",
-    "d3-selection": "^2.0.0",
-    "d3-shape": "^2.1.0",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-scripts": "4.0.3",
-    "tone": "^14.7.77"
+    "react-scripts": "^5.0.0",
+    "tone": "^14.7.77",
+    "use-effect-reducer": "^0.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,5 +42,9 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/d3-scale": "^4.0.2",
+    "@types/d3-selection": "^3.0.2",
+    "@types/d3-shape": "^3.0.2"
+  }
 }
