@@ -1,6 +1,6 @@
-import { ToneOscillatorType } from "tone";
 import { WaveformButton } from "./WaveformButton";
 import { useOscillator } from "./OscillatorContext";
+import type { ToneOscillatorType } from "tone";
 
 export const oscillatorTypes: Omit<OscillatorType, "custom">[] = [
   "sine",
@@ -16,7 +16,7 @@ export function OscillatorSelect() {
     if (baseType === "pulse" || baseType === "pwm") return;
 
     const index = oscillatorTypes.indexOf(
-      baseType as Omit<ToneOscillatorType, "custom">
+      baseType as Omit<ToneOscillatorType, "custom">,
     );
     const nextIndex = index === 3 ? 0 : index + 1;
     const nextBaseType = oscillatorTypes[nextIndex];

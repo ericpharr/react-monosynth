@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, WheelEvent } from "react";
+import { type ChangeEvent, useEffect, useRef, type WheelEvent } from "react";
 import { Knob } from "./Knob";
 import { useScale } from "./useScale";
 
@@ -47,7 +47,7 @@ export function FrequencyRangeSlider({
   useEffect(() => {
     document.body.setAttribute(
       "style",
-      "overflow:hidden;overscroll-behavior-x:none;"
+      "overflow:hidden;overscroll-behavior-x:none;",
     );
   }, []);
 
@@ -81,10 +81,10 @@ export function FrequencyRangeSlider({
             if (inputRef.current) {
               e.deltaY > 0
                 ? inputRef.current.stepDown(
-                    50 * Math.abs(e.deltaY) * Number(inputRef.current.step)
+                    50 * Math.abs(e.deltaY) * Number(inputRef.current.step),
                   )
                 : inputRef.current.stepUp(
-                    50 * Math.abs(e.deltaY) * Number(inputRef.current.step)
+                    50 * Math.abs(e.deltaY) * Number(inputRef.current.step),
                   );
 
               onChange(scale(Number(inputRef.current.value)));

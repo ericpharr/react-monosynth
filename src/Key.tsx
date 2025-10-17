@@ -1,7 +1,7 @@
-import { MouseEvent, useContext } from "react";
-import { Note } from "tone/build/esm/core/type/NoteUnits";
-import { KeyboardContext } from "./KeyboardProvider";
+import { type MouseEvent } from "react";
+import { type Note } from "tone/build/esm/core/type/NoteUnits";
 import { useKeyPress } from "./useKeyPress";
+import { useKeyboard } from "./useKeyboard";
 
 interface KeyProps {
   note: Note;
@@ -10,7 +10,7 @@ interface KeyProps {
 }
 
 export const Key = ({ note, trigger, acc }: KeyProps) => {
-  const { playing, play, release } = useContext(KeyboardContext);
+  const { playing, play, release } = useKeyboard();
   const isPlaying = playing.includes(note);
   const color = acc ? "black" : "white";
   const pressed = isPlaying ? `${color}__pressed` : "";
@@ -23,7 +23,7 @@ export const Key = ({ note, trigger, acc }: KeyProps) => {
     () => {
       release(note);
     },
-    []
+    [],
   );
 
   const handleMouseDown = (e: MouseEvent) => {

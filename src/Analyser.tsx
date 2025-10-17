@@ -1,13 +1,16 @@
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import {
-  createContext, useContext, useEffect,
+  createContext,
+  useContext,
+  useEffect,
   useRef,
-  useState
+  useState,
+  type ReactNode,
 } from "react";
-import { Analyser, AnalyserOptions } from "tone";
+import { Analyser, type AnalyserOptions } from "tone";
 import { useMonoSynth } from "./MonoSynthContext";
-import { useSoundState } from "./SoundProvider";
+import { useSoundState } from "./useSound";
 
 interface AnalyserContextValue {
   waveform: Analyser | null;
@@ -15,7 +18,7 @@ interface AnalyserContextValue {
   height: number;
 }
 const AnalyserContext = createContext<AnalyserContextValue>(
-  {} as AnalyserContextValue
+  {} as AnalyserContextValue,
 );
 
 export const AnalyserProvider = ({
@@ -23,9 +26,7 @@ export const AnalyserProvider = ({
   children,
 }: {
   options?: Partial<AnalyserOptions>;
-  children?: JSX.Element;
-  // width: number;
-  // height: number;
+  children?: ReactNode;
 }) => {
   const { synth } = useMonoSynth();
   const { isSilent } = useSoundState();

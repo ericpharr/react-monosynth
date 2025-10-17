@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 
 const MemoizedSvg = memo(Svg);
 export function Knob(props: SVGProps<SVGSVGElement>) {

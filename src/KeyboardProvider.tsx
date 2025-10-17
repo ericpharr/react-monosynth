@@ -1,30 +1,15 @@
-import { ReactElement } from "react";
-import { createContext } from "react";
-import { Note } from "tone/build/esm/core/type/NoteUnits";
+import { type ReactNode } from "react";
+import { type Note } from "tone/build/esm/core/type/NoteUnits";
 import { MonoSynthContext } from "./MonoSynthContext";
-import { Note as TonalNote } from "@tonaljs/tonal";
+import { Note as TonalNote } from "tonal";
 import { useContext } from "react";
 import { useEffectReducer } from "use-effect-reducer";
-import { useSoundDispatch } from "./SoundProvider";
-
-interface PlayingAction {
-  type: "PLAY" | "RELEASE";
-  note: Note;
-}
+import { useSoundDispatch } from "./useSound";
+import { KeyboardContext, type PlayingAction } from "./useKeyboard";
 
 interface KeyboardProviderProps {
-  children: ReactElement;
+  children: ReactNode;
 }
-
-interface KeyboardContextValue {
-  playing: Note[];
-  play: (note: Note) => void;
-  release: (note: Note) => void;
-}
-
-export const KeyboardContext = createContext<KeyboardContextValue>(
-  {} as KeyboardContextValue
-);
 
 export function KeyboardProvider({ children }: KeyboardProviderProps) {
   const { synth } = useContext(MonoSynthContext);
@@ -64,7 +49,7 @@ export function KeyboardProvider({ children }: KeyboardProviderProps) {
       }
       return state;
     },
-    []
+    [],
   );
 
   const play = (note: Note) => {
