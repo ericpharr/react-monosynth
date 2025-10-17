@@ -10,5 +10,5 @@ The project is deployed here: [Netlify](https://react-monosynth.netlify.app)
 
 TODO:
 
-- [ ] Migrate to Vite
+- [x] Migrate to Vite
 - [ ] Use Zustand for state management
