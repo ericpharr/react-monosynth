@@ -1,6 +1,6 @@
-import { Interval, Note, Range } from "@tonaljs/tonal";
+import { Interval, Note, Range } from "tonal";
 import { Key } from "./Key";
-import { Note as ToneNote } from "tone/build/esm/core/type/NoteUnits";
+import { type Note as ToneNote } from "tone/build/esm/core/type/NoteUnits";
 import { useMemo } from "react";
 
 const keyTriggers = "awsedftgyhujkolp;'".split("");
@@ -15,7 +15,7 @@ const createKeys = ({
   const startNote = `C${octave}`;
   const endNote = Note.transpose(
     startNote,
-    Interval.fromSemitones(numKeys - 1)
+    Interval.fromSemitones(numKeys - 1),
   );
   const noteArray = Range.chromatic([startNote, endNote]).map(Note.get);
 
@@ -30,7 +30,7 @@ interface KeyboardProps {
 export function Keyboard({ numKeys, octave }: KeyboardProps) {
   const keys = useMemo(
     () => createKeys({ numKeys, octave }),
-    [numKeys, octave]
+    [numKeys, octave],
   );
 
   return (

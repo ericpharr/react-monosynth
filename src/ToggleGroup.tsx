@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import "./ToggleGroup.css";
 
 export const ToggleGroup = ({
@@ -6,7 +6,7 @@ export const ToggleGroup = ({
   children,
 }: {
   vertical?: boolean;
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 }) => {
   return (
     <div
@@ -28,7 +28,7 @@ export const ToggleButton = ({
   type = "checkbox",
 }: {
   name: string;
-  label: string | JSX.Element;
+  label: string | ReactNode;
   value?: string;
   checked: boolean;
   onChange: (value: any) => void;

@@ -1,16 +1,10 @@
-import { createContext, useContext, useState } from "react";
-import { FrequencyEnvelopeOptions } from "tone";
+import { useState, type ReactNode } from "react";
 import { useMonoSynth } from "./MonoSynthContext";
-
-interface FilterEnvelopeContextValue {
-  filterEnvelope: FrequencyEnvelopeOptions;
-  setFilterEnvelope: (change: Partial<FrequencyEnvelopeOptions>) => void;
-}
-
-const FilterEnvelopeContext = createContext({} as FilterEnvelopeContextValue);
+import type { FrequencyEnvelopeOptions } from "tone";
+import { FilterEnvelopeContext } from "./FilterEnvelopeContext";
 
 interface FilterEnvelopeProviderProps {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 }
 
 export const FilterEnvelopeProvider = ({
@@ -18,7 +12,7 @@ export const FilterEnvelopeProvider = ({
 }: FilterEnvelopeProviderProps) => {
   const { synth } = useMonoSynth();
   const [filterEnvelope, setFilterEnvelope] = useState(
-    synth?.filterEnvelope.get() as FrequencyEnvelopeOptions
+    synth?.filterEnvelope.get() as FrequencyEnvelopeOptions,
   );
 
   const changeFilterEnvelope = (change: Partial<FrequencyEnvelopeOptions>) => {
@@ -34,11 +28,3 @@ export const FilterEnvelopeProvider = ({
     </FilterEnvelopeContext.Provider>
   );
 };
-
-export function useFilterEnvelope() {
-  const { filterEnvelope, setFilterEnvelope } = useContext(
-    FilterEnvelopeContext
-  );
-
-  return { filterEnvelope, setFilterEnvelope };
-}

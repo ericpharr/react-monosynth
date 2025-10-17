@@ -1,5 +1,5 @@
-import { createContext, ReactChildren, useContext, useState } from "react";
-import { EnvelopeOptions } from "tone";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import type { EnvelopeOptions } from "tone";
 import { MonoSynthContext } from "./MonoSynthContext";
 
 interface EnvelopeContextValue {
@@ -8,17 +8,17 @@ interface EnvelopeContextValue {
 }
 
 const EnvelopeContext = createContext<EnvelopeContextValue>(
-  {} as EnvelopeContextValue
+  {} as EnvelopeContextValue,
 );
 
 interface EnvelopeProviderProps {
-  children: ReactChildren;
+  children: ReactNode;
 }
 
 export const EnvelopeProvider = ({ children }: EnvelopeProviderProps) => {
   const { synth } = useContext(MonoSynthContext);
   const [envelope, setEnvelope] = useState(
-    synth?.envelope.get() || ({} as EnvelopeOptions)
+    synth?.envelope.get() || ({} as EnvelopeOptions),
   );
 
   const changeEnvelope = (change: Partial<EnvelopeOptions>) => {

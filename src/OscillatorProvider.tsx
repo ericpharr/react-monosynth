@@ -1,36 +1,25 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-} from "react";
-import { OmniOscillator, OmniOscillatorOptions, OmniOscSourceType } from "tone";
+import { useState } from "react";
 import { useMonoSynth } from "./MonoSynthContext";
-
-interface OscillatorContextValue {
-  oscillator: OmniOscillatorOptions;
-  setOscillator: (change: Partial<OmniOscillatorOptions>) => void;
-  baseType: OscillatorType | "pwm" | "pulse";
-  setBaseType: (change: OscillatorType | "pwm" | "pulse") => void;
-  sourceType: OmniOscSourceType;
-  setSourceType: (change: OmniOscSourceType) => void;
-}
-
-const OscillatorContext = createContext({} as OscillatorContextValue);
-
-interface OscillatorProviderProps {
-  children: JSX.Element | JSX.Element[];
-}
+import {
+  OscillatorContext,
+  type OscillatorProviderProps,
+} from "./OscillatorContext";
+import {
+  OmniOscillator,
+  type OmniOscillatorOptions,
+  type OmniOscSourceType,
+} from "tone";
 
 export const OscillatorProvider = ({ children }: OscillatorProviderProps) => {
   const { synth } = useMonoSynth();
   const [oscillator, setOscillator] = useState(
-    synth?.oscillator.get() ?? OmniOscillator.getDefaults()
+    synth?.oscillator.get() ?? OmniOscillator.getDefaults(),
   );
   const [baseType, setBaseType] = useState(
-    synth?.oscillator.baseType || "sawtooth"
+    synth?.oscillator.baseType || "sawtooth",
   );
   const [sourceType, setSourceType] = useState(
-    synth?.oscillator.sourceType || "oscillator"
+    synth?.oscillator.sourceType || "oscillator",
   );
 
   const changeOscillator = (change: Partial<OmniOscillatorOptions>) => {
@@ -75,23 +64,3 @@ export const OscillatorProvider = ({ children }: OscillatorProviderProps) => {
     </OscillatorContext.Provider>
   );
 };
-
-export function useOscillator() {
-  const {
-    oscillator,
-    setOscillator,
-    baseType,
-    sourceType,
-    setBaseType,
-    setSourceType,
-  } = useContext(OscillatorContext);
-
-  return {
-    oscillator,
-    sourceType,
-    baseType,
-    setOscillator,
-    setSourceType,
-    setBaseType,
-  };
-}

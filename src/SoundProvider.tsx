@@ -1,34 +1,10 @@
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMonoSynth } from "./MonoSynthContext";
-
-interface SoundProviderProps {
-  children: JSX.Element | JSX.Element[];
-}
-
-interface SoundContextValue {
-  isSilent: boolean;
-}
-
-interface SoundDispatchContextValue {
-  setIsSilent: Dispatch<SetStateAction<boolean>>;
-  setIsReleased: Dispatch<SetStateAction<boolean>>;
-}
-
-const SoundContext = createContext<SoundContextValue>({
-  isSilent: true,
-});
-
-const SoundDispatchContext = createContext<SoundDispatchContextValue>(
-  {} as SoundDispatchContextValue
-);
+import {
+  SoundContext,
+  SoundDispatchContext,
+  type SoundProviderProps,
+} from "./useSound";
 
 export function SoundProvider({ children }: SoundProviderProps) {
   const { synth } = useMonoSynth();
@@ -54,16 +30,4 @@ export function SoundProvider({ children }: SoundProviderProps) {
       </SoundDispatchContext.Provider>
     </SoundContext.Provider>
   );
-}
-
-export function useSoundState() {
-  const { isSilent } = useContext(SoundContext);
-
-  return { isSilent };
-}
-
-export function useSoundDispatch() {
-  const { setIsSilent, setIsReleased } = useContext(SoundDispatchContext);
-
-  return { setIsSilent, setIsReleased };
 }

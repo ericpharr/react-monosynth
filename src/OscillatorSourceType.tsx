@@ -1,6 +1,6 @@
 import { ToggleButton, ToggleGroup } from "./ToggleGroup";
 import { useOscillator } from "./OscillatorContext";
-import { OmniOscSourceType } from "tone/build/esm/source";
+import { type OmniOscSourceType } from "tone/build/esm/source";
 
 export const OscillatorSourceType = () => {
   const { sourceType, setSourceType } = useOscillator();

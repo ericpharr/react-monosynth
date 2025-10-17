@@ -1,4 +1,4 @@
-import { NumberValue, scaleLinear, scaleLog, scalePow } from "d3-scale";
+import { type NumberValue, scaleLinear, scaleLog, scalePow } from "d3-scale";
 import { useCallback } from "react";
 
 interface ScaleProps {
