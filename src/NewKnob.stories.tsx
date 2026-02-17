@@ -8,6 +8,6 @@ export const Knob = () => (
     min={0}
     max={10}
     step={0.01}
-    setValue={(n: number) => n}
+    setValue={(n: number) => { console.log(n); }}
   />
 );
