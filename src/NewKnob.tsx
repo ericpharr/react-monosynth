@@ -1,4 +1,5 @@
 import { scaleLinear } from "d3-scale";
+import { arc } from "d3-shape";
 import classes from "./NewKnob.module.css";
 import { useRef, useState } from "react";
 
@@ -12,58 +13,53 @@ interface KnobProps {
   setValue: (n: number) => void;
 }
 
-// Maps value → CSS rotation degrees (45° = min, 315° = max)
-const toRotation = (value: number, min: number, max: number) =>
-  scaleLinear().domain([min, max]).range([45, 315]).clamp(true)(value);
-
 const clamp = (val: number, min: number, max: number) =>
   Math.min(max, Math.max(min, val));
 
-// SVG arc helpers
-// Arc starts at 135° (7:30 position) and sweeps 270° clockwise to 4:30
-const START_ANGLE_DEG = 135;
-const TOTAL_SWEEP_DEG = 270;
+// d3-shape arc convention: 0 = top (12 o'clock), clockwise, radians
+// Min position (7:30) = 5π/4, sweeps 270° = 3π/2 clockwise to 4:30
+const START_ANGLE = (5 * Math.PI) / 4;
+const TOTAL_SWEEP = (3 * Math.PI) / 2;
 
-const toRad = (deg: number) => (deg * Math.PI) / 180;
+const ARC_INNER = 41.5;
+const ARC_OUTER = 44.5;
 
-const polarToCartesian = (cx: number, cy: number, r: number, angleDeg: number) => ({
-  x: cx + r * Math.cos(toRad(angleDeg)),
-  y: cy + r * Math.sin(toRad(angleDeg)),
-});
+// arc() generates paths centered at (0,0); we translate to (50,50) in the SVG
+const arcGen = arc<{ startAngle: number; endAngle: number }>()
+  .innerRadius(ARC_INNER)
+  .outerRadius(ARC_OUTER)
+  .cornerRadius(1.5)
+  .startAngle((d) => d.startAngle)
+  .endAngle((d) => d.endAngle);
 
-const describeArc = (
-  cx: number,
-  cy: number,
-  r: number,
-  startAngle: number,
-  sweepAngle: number,
-) => {
-  if (sweepAngle <= 0) return "";
-  const clamped = Math.min(sweepAngle, 359.99);
-  const start = polarToCartesian(cx, cy, r, startAngle);
-  const end = polarToCartesian(cx, cy, r, startAngle + clamped);
-  const largeArc = clamped > 180 ? 1 : 0;
-  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
-};
+const makeArcPath = (startAngle: number, endAngle: number) =>
+  arcGen({ startAngle, endAngle }) ?? "";
 
-const NUM_TICKS = 11;
-const CX = 50;
-const CY = 50;
-const ARC_R = 44;
+const trackPath = makeArcPath(START_ANGLE, START_ANGLE + TOTAL_SWEEP);
 
-const ticks = Array.from({ length: NUM_TICKS }, (_, i) => {
-  const angle = START_ANGLE_DEG + (i / (NUM_TICKS - 1)) * TOTAL_SWEEP_DEG;
-  const inner = polarToCartesian(CX, CY, 40, angle);
-  const outer = polarToCartesian(CX, CY, 47, angle);
-  const isMajor = i === 0 || i === NUM_TICKS - 1 || i === Math.floor(NUM_TICKS / 2);
-  return { inner, outer, isMajor };
-});
-
-const trackPath = describeArc(CX, CY, ARC_R, START_ANGLE_DEG, TOTAL_SWEEP_DEG);
-
-export const NewKnob = ({ name, label, value: initialValue, min, max, step, setValue }: KnobProps) => {
+export const NewKnob = ({
+  name,
+  label,
+  value: initialValue,
+  min,
+  max,
+  step,
+  setValue,
+}: KnobProps) => {
   const [value, setInternalValue] = useState(initialValue);
   const valueRef = useRef(value);
+
+  // scaleLinear: value → CSS rotation degrees (45° = min, 315° = max)
+  const rotationScale = scaleLinear()
+    .domain([min, max])
+    .range([45, 315])
+    .clamp(true);
+
+  // scaleLinear: value → d3 arc end angle
+  const angleScale = scaleLinear()
+    .domain([min, max])
+    .range([START_ANGLE, START_ANGLE + TOTAL_SWEEP])
+    .clamp(true);
 
   const sensitivity = (max - min) / 200;
 
@@ -109,10 +105,9 @@ export const NewKnob = ({ name, label, value: initialValue, min, max, step, setV
     }
   };
 
-  const rotation = toRotation(value, min, max);
-  const normalizedValue = (value - min) / (max - min);
-  const valueSweep = normalizedValue * TOTAL_SWEEP_DEG;
-  const valuePath = describeArc(CX, CY, ARC_R, START_ANGLE_DEG, valueSweep);
+  const rotation = rotationScale(value);
+  const endAngle = angleScale(value);
+  const valuePath = makeArcPath(START_ANGLE, endAngle);
 
   const displayValue = step >= 1 ? value.toFixed(0) : value.toFixed(2);
 
@@ -124,18 +119,21 @@ export const NewKnob = ({ name, label, value: initialValue, min, max, step, setV
           viewBox="0 0 100 100"
           aria-hidden="true"
         >
-          {ticks.map((tick, i) => (
-            <line
-              key={i}
-              x1={tick.inner.x}
-              y1={tick.inner.y}
-              x2={tick.outer.x}
-              y2={tick.outer.y}
-              className={tick.isMajor ? classes.tickMajor : classes.tick}
+          {/* arc() centers at (0,0); translate to SVG center */}
+          <g transform="translate(50, 50)">
+            <path
+              d={trackPath}
+              className={classes.trackArc}
+              style={{ fill: "#2e2e2e", stroke: "none" }}
             />
-          ))}
-          <path d={trackPath} className={classes.trackArc} />
-          {valueSweep > 0 && <path d={valuePath} className={classes.valueArc} />}
+            {endAngle > START_ANGLE && (
+              <path
+                d={valuePath}
+                className={classes.valueArc}
+                style={{ fill: "#ccc", stroke: "none" }}
+              />
+            )}
+          </g>
         </svg>
         <div className={classes.knobWell}>
           <div className={classes.shadow}>
