@@ -49,10 +49,11 @@ export const NewKnob = ({
   const [value, setInternalValue] = useState(initialValue);
   const valueRef = useRef(value);
 
-  // scaleLinear: value → CSS rotation degrees (45° = min, 315° = max)
+  // scaleLinear: value → CSS rotation degrees (225° = min at 7:30, 495° = max at 4:30)
+  // Notch starts vertical (top), rotates 270° clockwise through 12 o'clock
   const rotationScale = scaleLinear()
     .domain([min, max])
-    .range([45, 315])
+    .range([-135, 135])
     .clamp(true);
 
   // scaleLinear: value → d3 arc end angle
