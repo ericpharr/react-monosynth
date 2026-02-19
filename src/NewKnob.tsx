@@ -108,7 +108,27 @@ export const NewKnob = ({
 
   const rotation = rotationScale(value);
   const endAngle = angleScale(value);
-  const valuePath = makeArcPath(START_ANGLE, endAngle);
+
+  // Detect bipolar range (e.g., -10 to +10)
+  const isBipolar = min === -max && min < 0;
+
+  // For bipolar: arc from 0 to value (center to current position)
+  // For unipolar: arc from min to value (start to current position)
+  let valuePathStartAngle = START_ANGLE;
+  let valuePathEndAngle = endAngle;
+
+  if (isBipolar) {
+    const zeroAngle = START_ANGLE + TOTAL_SWEEP / 2; // 0 is at center (12 o'clock)
+    if (value >= 0) {
+      valuePathStartAngle = zeroAngle;
+      valuePathEndAngle = endAngle;
+    } else {
+      valuePathStartAngle = endAngle;
+      valuePathEndAngle = zeroAngle;
+    }
+  }
+
+  const valuePath = makeArcPath(valuePathStartAngle, valuePathEndAngle);
 
   const displayValue = step >= 1 ? value.toFixed(0) : value.toFixed(2);
 
@@ -127,7 +147,7 @@ export const NewKnob = ({
               className={classes.trackArc}
               style={{ fill: "#2e2e2e", stroke: "none" }}
             />
-            {endAngle > START_ANGLE && (
+            {(isBipolar ? value !== 0 : endAngle > START_ANGLE) && (
               <path
                 d={valuePath}
                 className={classes.valueArc}
