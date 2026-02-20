@@ -1,16 +1,48 @@
-import { scaleLinear } from "d3-scale";
+import { scaleLinear, scaleLog, scalePow } from "d3-scale";
 import { arc } from "d3-shape";
 import classes from "./NewKnob.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+/**
+ * Knob component with internal scaling support.
+ *
+ * ```tsx
+ * // Linear (default)
+ * <NewKnob value={50} min={0} max={100} setValue={setVal} />
+ *
+ * // Power scale for frequency (20Hz - 20kHz)
+ * <NewKnob
+ *   value={800}
+ *   min={20}
+ *   max={20000}
+ *   scale="power"
+ *   exponent={49/12}
+ *   setValue={setFreq}
+ * />
+ *
+ * // Log scale
+ * <NewKnob value={100} min={1} max={1000} scale="log" base={10} setValue={setVal} />
+ * ```
+ */
 interface KnobProps {
   name: string;
+  /** Current value in actual units (e.g., 800 Hz) */
   value: number;
+  /** Minimum value in actual units (e.g., 20 Hz) */
   min: number;
+  /** Maximum value in actual units (e.g., 20000 Hz) */
   max: number;
-  step: number;
+  /** Step size in display units (0-100 range), default 0.1 */
+  step?: number;
   label: string;
-  setValue: (n: number) => void;
+  /** Called with actual value when changed */
+  setValue: (actualValue: number) => void;
+  /** Scale type: "linear" (default), "power", or "log" */
+  scale?: "linear" | "power" | "log";
+  /** Exponent for power scale (e.g., 49/12 for musical frequency) */
+  exponent?: number;
+  /** Base for log scale (default 10) */
+  base?: number;
 }
 
 const clamp = (val: number, min: number, max: number) =>
@@ -40,35 +72,73 @@ const trackPath = makeArcPath(START_ANGLE, START_ANGLE + TOTAL_SWEEP);
 export const NewKnob = ({
   name,
   label,
-  value: initialValue,
+  value: actualValue,
   min,
   max,
-  step,
+  step = 0.1,
   setValue,
+  scale: scaleType = "linear",
+  exponent = 1,
+  base = 10,
 }: KnobProps) => {
-  const [value, setInternalValue] = useState(initialValue);
-  const valueRef = useRef(value);
+  // Create scale: display [0-100] ↔ actual [min-max]
+  const valueScale = useMemo(() => {
+    const domain = [1, 100]; // display range
+    const range = [min, max]; // actual range
 
-  // scaleLinear: value → CSS rotation degrees (225° = min at 7:30, 495° = max at 4:30)
+    switch (scaleType) {
+      case "power":
+        return scalePow()
+          .domain(domain)
+          .range(range)
+          .exponent(exponent)
+          .clamp(true);
+      case "log":
+        return scaleLog().domain(domain).range(range).base(base).clamp(true);
+      case "linear":
+      default:
+        return scaleLinear().domain(domain).range(range).clamp(true);
+    }
+  }, [min, max, scaleType, exponent, base]);
+
+  // Convert between actual and display values
+  const actualToDisplay = (actual: number) =>
+    valueScale.invert(actual) as number;
+  const displayToActual = (display: number) => valueScale(display) as number;
+
+  const [displayValue, setDisplayValue] = useState(() =>
+    actualToDisplay(actualValue),
+  );
+  const displayRef = useRef(displayValue);
+
+  // Sync when actual value changes from parent
+  useEffect(() => {
+    const newDisplay = actualToDisplay(actualValue);
+    setDisplayValue(newDisplay);
+    displayRef.current = newDisplay;
+  }, [actualValue, valueScale]);
+
+  // scaleLinear: display [0-100] → CSS rotation degrees (-135° to 135°)
   // Notch starts vertical (top), rotates 270° clockwise through 12 o'clock
   const rotationScale = scaleLinear()
-    .domain([min, max])
+    .domain([1, 100])
     .range([-135, 135])
     .clamp(true);
 
-  // scaleLinear: value → d3 arc end angle
+  // scaleLinear: display [0-100] → d3 arc end angle
   const angleScale = scaleLinear()
-    .domain([min, max])
+    .domain([1, 100])
     .range([START_ANGLE, START_ANGLE + TOTAL_SWEEP])
     .clamp(true);
 
-  const sensitivity = (max - min) / 200;
+  const sensitivity = 100 / 200; // 0.5 display units per pixel
 
-  const update = (newVal: number) => {
-    const clamped = clamp(newVal, min, max);
-    valueRef.current = clamped;
-    setInternalValue(clamped);
-    setValue(clamped);
+  const update = (newDisplayVal: number) => {
+    const clampedDisplay = clamp(newDisplayVal, 0, 100);
+    const actualVal = displayToActual(newDisplayVal);
+    displayRef.current = clampedDisplay;
+    setDisplayValue(clampedDisplay);
+    setValue(actualVal);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -78,7 +148,7 @@ export const NewKnob = ({
     const onMove = (ev: MouseEvent) => {
       const delta = lastY - ev.clientY;
       lastY = ev.clientY;
-      update(valueRef.current + delta * sensitivity);
+      update(displayRef.current + delta * sensitivity);
     };
 
     const onUp = () => {
@@ -93,33 +163,34 @@ export const NewKnob = ({
   const handleWheel = (e: React.WheelEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    update(valueRef.current - e.deltaY * ((max - min) / 1000));
+    update(displayRef.current - e.deltaY * (100 / 1000));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowUp" || e.key === "ArrowRight") {
       e.preventDefault();
-      update(valueRef.current + step);
+      update(displayRef.current + step);
     } else if (e.key === "ArrowDown" || e.key === "ArrowLeft") {
       e.preventDefault();
-      update(valueRef.current - step);
+      update(displayRef.current - step);
     }
   };
 
-  const rotation = rotationScale(value);
-  const endAngle = angleScale(value);
+  const rotation = rotationScale(displayValue);
+  const endAngle = angleScale(displayValue);
 
-  // Detect bipolar range (e.g., -10 to +10)
+  // Detect bipolar range (e.g., -10 to +10 in actual units)
   const isBipolar = min === -max && min < 0;
 
-  // For bipolar: arc from 0 to value (center to current position)
-  // For unipolar: arc from min to value (start to current position)
+  // For bipolar: arc from center (50) to current display position
+  // For unipolar: arc from start (0) to current display position
   let valuePathStartAngle = START_ANGLE;
   let valuePathEndAngle = endAngle;
 
   if (isBipolar) {
-    const zeroAngle = START_ANGLE + TOTAL_SWEEP / 2; // 0 is at center (12 o'clock)
-    if (value >= 0) {
+    const zeroAngle = START_ANGLE + TOTAL_SWEEP / 2; // 0 actual = 50 display = 12 o'clock
+    const centerDisplay = 50; // center of display range
+    if (displayValue >= centerDisplay) {
       valuePathStartAngle = zeroAngle;
       valuePathEndAngle = endAngle;
     } else {
@@ -130,7 +201,13 @@ export const NewKnob = ({
 
   const valuePath = makeArcPath(valuePathStartAngle, valuePathEndAngle);
 
-  const displayValue = step >= 1 ? value.toFixed(0) : value.toFixed(2);
+  // Format actual value for display
+  const formattedValue =
+    actualValue >= 100 || actualValue <= -100
+      ? actualValue.toFixed(0)
+      : actualValue >= 10 || actualValue <= -10
+        ? actualValue.toFixed(1)
+        : actualValue.toFixed(2);
 
   return (
     <div className={classes.box}>
@@ -147,7 +224,7 @@ export const NewKnob = ({
               className={classes.trackArc}
               style={{ fill: "#2e2e2e", stroke: "none" }}
             />
-            {(isBipolar ? value !== 0 : endAngle > START_ANGLE) && (
+            {(isBipolar ? displayValue !== 50 : displayValue > 0) && (
               <path
                 d={valuePath}
                 className={classes.valueArc}
@@ -165,14 +242,17 @@ export const NewKnob = ({
               aria-label={label}
               aria-valuemin={min}
               aria-valuemax={max}
-              aria-valuenow={value}
+              aria-valuenow={actualValue}
               style={{ rotate: `${rotation}deg` }}
               onMouseDown={handleMouseDown}
               onWheel={handleWheel}
               onKeyDown={handleKeyDown}
               onDragStart={(e) => e.preventDefault()}
             >
-              <div className={classes.notch} />
+              <div
+                className={classes.notch}
+                style={{ top: "-4px", bottom: "auto" }}
+              />
             </div>
           </div>
         </div>
@@ -181,7 +261,7 @@ export const NewKnob = ({
         {label}
       </label>
       <output name={name} className={classes.value}>
-        {displayValue}
+        {formattedValue}
       </output>
     </div>
   );
