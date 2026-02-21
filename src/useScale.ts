@@ -19,17 +19,21 @@ function createScale({
   switch (scale) {
     case "linear":
       return {
-        fn: scaleLinear().domain(domain).range(range),
+        fn: scaleLinear().domain(domain).range(range).clamp(true),
         deps: [domain, range],
       };
     case "power":
       return {
-        fn: scalePow().exponent(exponent).domain(domain).range(range),
+        fn: scalePow()
+          .exponent(exponent)
+          .domain(domain)
+          .range(range)
+          .clamp(true),
         deps: [domain, range, exponent],
       };
     case "log":
       return {
-        fn: scaleLog().base(base).domain(domain).range(range),
+        fn: scaleLog().base(base).domain(domain).range(range).clamp(true),
         deps: [domain, range, base],
       };
   }

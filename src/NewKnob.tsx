@@ -1,7 +1,8 @@
-import { scaleLinear, scaleLog, scalePow } from "d3-scale";
+import { scaleLinear } from "d3-scale";
 import { arc } from "d3-shape";
 import classes from "./NewKnob.module.css";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useScale } from "./useScale";
 
 /**
  * Knob component with internal scaling support.
@@ -45,9 +46,6 @@ interface KnobProps {
   base?: number;
 }
 
-const clamp = (val: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, val));
-
 // d3-shape arc convention: 0 = top (12 o'clock), clockwise, radians
 // Min position (7:30) = 5π/4, sweeps 270° = 3π/2 clockwise to 4:30
 const START_ANGLE = (5 * Math.PI) / 4;
@@ -75,45 +73,29 @@ export const NewKnob = ({
   value: actualValue,
   min,
   max,
-  step = 0.1,
+  step = 1,
   setValue,
   scale: scaleType = "linear",
   exponent = 1,
   base = 10,
 }: KnobProps) => {
   // Create scale: display [0-100] ↔ actual [min-max]
-  const valueScale = useMemo(() => {
-    const domain = [1, 100]; // display range
-    const range = [min, max]; // actual range
+  const valueScale = useScale({
+    scale: scaleType,
+    domain: [0, 100],
+    range: [min, max],
+    exponent: exponent,
+    base: base,
+  });
 
-    switch (scaleType) {
-      case "power":
-        return scalePow()
-          .domain(domain)
-          .range(range)
-          .exponent(exponent)
-          .clamp(true);
-      case "log":
-        return scaleLog().domain(domain).range(range).base(base).clamp(true);
-      case "linear":
-      default:
-        return scaleLinear().domain(domain).range(range).clamp(true);
-    }
-  }, [min, max, scaleType, exponent, base]);
-
-  // Convert between actual and display values
-  const actualToDisplay = (actual: number) =>
-    valueScale.invert(actual) as number;
-  const displayToActual = (display: number) => valueScale(display) as number;
-
-  const [displayValue, setDisplayValue] = useState(() =>
-    actualToDisplay(actualValue),
+  const [displayValue, setDisplayValue] = useState(
+    () => valueScale.invert(actualValue) as number,
   );
   const displayRef = useRef(displayValue);
 
   // Sync when actual value changes from parent
   useEffect(() => {
-    const newDisplay = actualToDisplay(actualValue);
+    const newDisplay = valueScale.invert(actualValue) as number;
     setDisplayValue(newDisplay);
     displayRef.current = newDisplay;
   }, [actualValue, valueScale]);
@@ -121,21 +103,21 @@ export const NewKnob = ({
   // scaleLinear: display [0-100] → CSS rotation degrees (-135° to 135°)
   // Notch starts vertical (top), rotates 270° clockwise through 12 o'clock
   const rotationScale = scaleLinear()
-    .domain([1, 100])
+    .domain([0, 100])
     .range([-135, 135])
     .clamp(true);
 
   // scaleLinear: display [0-100] → d3 arc end angle
   const angleScale = scaleLinear()
-    .domain([1, 100])
+    .domain([0, 100])
     .range([START_ANGLE, START_ANGLE + TOTAL_SWEEP])
     .clamp(true);
 
   const sensitivity = 100 / 200; // 0.5 display units per pixel
 
   const update = (newDisplayVal: number) => {
-    const clampedDisplay = clamp(newDisplayVal, 0, 100);
-    const actualVal = displayToActual(newDisplayVal);
+    const clampedDisplay = Math.min(100, Math.max(1, newDisplayVal));
+    const actualVal = valueScale(clampedDisplay) as number;
     displayRef.current = clampedDisplay;
     setDisplayValue(clampedDisplay);
     setValue(actualVal);
@@ -188,8 +170,8 @@ export const NewKnob = ({
   let valuePathEndAngle = endAngle;
 
   if (isBipolar) {
-    const zeroAngle = START_ANGLE + TOTAL_SWEEP / 2; // 0 actual = 50 display = 12 o'clock
-    const centerDisplay = 50; // center of display range
+    const zeroAngle = START_ANGLE + TOTAL_SWEEP / 2; // 0 actual = 50.5 display = 12 o'clock
+    const centerDisplay = 50.5; // center of display range [1, 100]
     if (displayValue >= centerDisplay) {
       valuePathStartAngle = zeroAngle;
       valuePathEndAngle = endAngle;
@@ -224,7 +206,7 @@ export const NewKnob = ({
               className={classes.trackArc}
               style={{ fill: "#2e2e2e", stroke: "none" }}
             />
-            {(isBipolar ? displayValue !== 50 : displayValue > 0) && (
+            {(isBipolar ? displayValue !== 50.5 : displayValue > 1) && (
               <path
                 d={valuePath}
                 className={classes.valueArc}

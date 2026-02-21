@@ -14,7 +14,7 @@ body {
   align-items: center;
   user-drag: none;
   -webkit-user-drag: none;
-  background-color: #555;
+  background-color: transparent;
 }
 
 /* Container for knob + SVG arc overlay */

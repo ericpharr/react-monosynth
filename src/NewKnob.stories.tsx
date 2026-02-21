@@ -1,5 +1,16 @@
 import { useState } from "react";
 import { NewKnob } from "./NewKnob";
+import type { StoryDefault } from "@ladle/react";
+
+export default {
+  decorators: [
+    (Story) => (
+      <div style={{ backgroundColor: "#484848" }}>
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies StoryDefault;
 
 export const Linear = () => {
   const [value, setValue] = useState(50);
@@ -29,7 +40,6 @@ export const Bipolar = () => {
         value={value}
         min={-1}
         max={1}
-        step={0.01}
         setValue={setValue}
       />
     </>
