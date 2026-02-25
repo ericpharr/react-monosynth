@@ -1,7 +1,7 @@
 import { type MouseEvent } from "react";
 import { type Note } from "tone/build/esm/core/type/NoteUnits";
 import { useKeyPress } from "./useKeyPress";
-import { useKeyboard } from "./useKeyboard";
+import { useMonoSynthStore } from "./store";
 
 interface KeyProps {
   note: Note;
@@ -10,7 +10,9 @@ interface KeyProps {
 }
 
 export const Key = ({ note, trigger, acc }: KeyProps) => {
-  const { playing, play, release } = useKeyboard();
+  const playing = useMonoSynthStore((state) => state.playing);
+  const play = useMonoSynthStore((state) => state.play);
+  const release = useMonoSynthStore((state) => state.release);
   const isPlaying = playing.includes(note);
   const color = acc ? "black" : "white";
   const pressed = isPlaying ? `${color}__pressed` : "";

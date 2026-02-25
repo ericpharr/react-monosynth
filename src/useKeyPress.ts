@@ -4,7 +4,7 @@ export function useKeyPress(
   targetKey: string,
   onPressDown = () => {},
   onPressUp = () => {},
-  deps: any[]
+  deps: any[],
 ) {
   const prevKey = useRef("");
   return useEffect(() => {

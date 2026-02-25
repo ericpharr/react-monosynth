@@ -9,8 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { Analyser, type AnalyserOptions } from "tone";
-import { useMonoSynth } from "./MonoSynthContext";
-import { useSoundState } from "./useSound";
+import { useMonoSynthStore } from "./store";
 
 interface AnalyserContextValue {
   waveform: Analyser | null;
@@ -28,14 +27,14 @@ export const AnalyserProvider = ({
   options?: Partial<AnalyserOptions>;
   children?: ReactNode;
 }) => {
-  const { synth } = useMonoSynth();
-  const { isSilent } = useSoundState();
+  const synth = useMonoSynthStore((state) => state.getSynth());
+  const isSilent = useMonoSynthStore((state) => state.isSilent);
   const analyser = useRef<Analyser | null>(null);
   const element = useRef<HTMLDivElement>({} as HTMLDivElement);
 
   useEffect(() => {
     analyser.current = new Analyser(options);
-    synth?.connect(analyser.current);
+    synth.connect(analyser.current);
     return () => {
       analyser.current?.dispose();
       analyser.current = null;

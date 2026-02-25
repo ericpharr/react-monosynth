@@ -1,8 +1,9 @@
-import { useFilter } from "./FilterContext";
+import { useMonoSynthStore } from "./store";
 import { ToggleButton, ToggleGroup } from "./ToggleGroup";
 
 export const FilterType = () => {
-  const { filter, setFilter } = useFilter();
+  const filter = useMonoSynthStore((state) => state.filter);
+  const setFilter = useMonoSynthStore((state) => state.setFilter);
 
   const onChange = (value: BiquadFilterType) => {
     setFilter({ type: value });

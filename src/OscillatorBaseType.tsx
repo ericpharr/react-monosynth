@@ -1,5 +1,5 @@
 import { WaveformButton } from "./WaveformButton";
-import { useOscillator } from "./OscillatorContext";
+import { useMonoSynthStore } from "./store";
 import type { ToneOscillatorType } from "tone";
 
 export const oscillatorTypes: Omit<OscillatorType, "custom">[] = [
@@ -10,7 +10,8 @@ export const oscillatorTypes: Omit<OscillatorType, "custom">[] = [
 ];
 
 export function OscillatorSelect() {
-  const { setBaseType, baseType } = useOscillator();
+  const baseType = useMonoSynthStore((state) => state.baseType);
+  const setBaseType = useMonoSynthStore((state) => state.setBaseType);
 
   const nextBaseType = () => {
     if (baseType === "pulse" || baseType === "pwm") return;
