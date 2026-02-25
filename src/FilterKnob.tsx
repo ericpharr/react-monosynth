@@ -1,5 +1,4 @@
 import type { Frequency } from "tone/build/esm/core/type/Units";
-import { FrequencyRangeSlider } from "./FrequencyRangeSlider";
 import { useFilterEnvelope } from "./FilterEnvelopeContext";
 import { NewKnob } from "./NewKnob";
 
