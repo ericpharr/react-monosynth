@@ -1,9 +1,12 @@
 import type { Frequency } from "tone/build/esm/core/type/Units";
-import { useFilterEnvelope } from "./FilterEnvelopeContext";
+import { useMonoSynthStore } from "./store";
 import { NewKnob } from "./NewKnob";
 
 export function FilterKnob() {
-  const { filterEnvelope, setFilterEnvelope } = useFilterEnvelope();
+  const filterEnvelope = useMonoSynthStore((state) => state.filterEnvelope);
+  const setFilterEnvelope = useMonoSynthStore(
+    (state) => state.setFilterEnvelope,
+  );
 
   const handleChange = (baseFrequency: Frequency) => {
     setFilterEnvelope({ baseFrequency });
