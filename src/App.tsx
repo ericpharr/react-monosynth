@@ -21,8 +21,10 @@ function App() {
             <AnalyserProvider options={{ type: "waveform" }}>
               <Analyzer />
             </AnalyserProvider>
-            <FilterKnob />
-            <FilterQ />
+            <div>
+              <FilterKnob />
+              <FilterQ />
+            </div>
             <FilterType />
           </div>
           <Keyboard numKeys={18} octave={3} />
