@@ -1,0 +1,142 @@
+body {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: center;
+  user-drag: none;
+  -webkit-user-drag: none;
+  background-color: transparent;
+}
+
+/* Container for knob + SVG arc overlay */
+.knobContainer {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* SVG sits behind the knob, fills the full container */
+.arcSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.trackArc {
+  fill: none;
+  stroke: #2e2e2e;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.valueArc {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.tick {
+  stroke: #3a3a3a;
+  stroke-width: 1;
+}
+
+.tickMajor {
+  stroke: #5a5a5a;
+  stroke-width: 1.5;
+}
+
+/* Knob well — slightly smaller than container to leave room for arc */
+.knobWell {
+  height: 3.7rem;
+  width: 3.8rem;
+  border-radius: 999999px;
+  border: 1px solid #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 2px 2px #111;
+}
+
+.shadow {
+  border-radius: 9999999px;
+  width: 95%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 2px 4px 0.3rem #2228;
+}
+
+.knob {
+  user-select: all;
+  user-drag: none;
+  -webkit-user-drag: none;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 999999px;
+  border: 1px solid #666;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  background: radial-gradient(#fff 0%, #ddd 80%, #444 90%);
+  cursor: ns-resize;
+}
+
+.knob:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #888;
+}
+
+.notch {
+  background-color: #ccc;
+  height: 40%;
+  width: 4%;
+  border: 1px solid #777;
+  position: absolute;
+  top: -4px;
+  bottom: auto;
+  border-radius: 999999px;
+  box-shadow: inset 0 0 4px #555a;
+}
+
+.label {
+  margin-top: 0.6rem;
+  color: #aaa;
+  font-family: "Fira Code", monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.value {
+  margin-top: 0.3rem;
+  background-color: #333;
+  border-radius: 4px;
+  color: #ddd;
+  text-align: center;
+  font-family: "Fira Code", monospace;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  min-width: 3.5rem;
+  box-shadow: inset 0 0 2px 2px #222a;
+  display: block;
+}
